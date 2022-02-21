@@ -2,12 +2,12 @@ import resolve from '@rollup/plugin-node-resolve'; // locate and bundle dependen
 import { terser } from "rollup-plugin-terser"; // code minification (optional)
 
 export default {
-	input: 'app/js/main.js',
+	input: 'synthetic-tablet/js/main.js',
 	output: [
 		{
 			format: 'umd',
 			name: 'MYAPP',
-			file: 'app/js/bundle.js'
+			file: 'synthetic-tablet/js/bundle.js'
 		}
 	],
 	plugins: [ resolve(), terser() ],

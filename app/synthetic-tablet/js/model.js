@@ -30,7 +30,7 @@ class Model {
 
     // Load texture
     let loader = new THREE.TextureLoader();
-    texture =loader.load('app/model/rough.png',
+    texture =loader.load('synthetic-tablet/model/rough.png',
       function ( e ) {
         e.wrapS = THREE.ClampToEdgeWrapping;
         e.wrapT = THREE.RepeatWrapping;
@@ -56,7 +56,7 @@ class Model {
 
     // Load the meshes and apply materials.
     loader = new GLTFLoader();
-    loader.load( 'app/model/model.gltf', function ( gltf ) {
+    loader.load( 'synthetic-tablet/model/model.gltf', function ( gltf ) {
         gltf.scene.scale.set(0.2,0.2,0.2);
         gltf.scene.traverse( function(child) {
           if (child instanceof THREE.Mesh) {
