@@ -1,8 +1,20 @@
 version: '3.5'
+
 services:
 
   nginx:
+    image: synthetic-tablet
+    container_name: synthetic-tablet
     build:
       context: .
       dockerfile: nginx/Dockerfile
+    ports:
+      - "29180:80"
+      - "29181:443"
+    networks:
+      - reverse-proxy
     restart: unless-stopped
+
+networks:
+  reverse-proxy:
+    external: true

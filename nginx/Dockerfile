@@ -1,6 +1,8 @@
 FROM nginx
 
 COPY nginx/nginx.conf /etc/nginx/.
+RUN mkdir /etc/nginx/ssl
+COPY ./nginx/xeon.crt ./nginx/xeon.key /etc/nginx/ssl/
 
 WORKDIR /usr/share/nginx/html
 COPY package.json rollup_config.js ./

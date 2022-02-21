@@ -1,8 +1,0 @@
-version: '3.5'
-services:
-
-  nginx:
-    image: threejs
-    container_name: threejs
-    ports:
-      - "80:80"
