@@ -1,0 +1,30 @@
+http:
+  routers:
+    synthetic-tablet-generator:
+      entrypoints: 
+        - web
+        - web-secure
+      tls: true
+      rule: "Path(`/synthetic-tablet-generator`)"
+      middlewares:
+        - "synthetic-tablet-generator"
+      service: "synthetic-tablet"
+    synthetic-tablet:
+      entrypoints: 
+        - web
+        - web-secure
+      tls: true
+      rule: "PathPrefix(`/synthetic-tablet`)"
+      service: "synthetic-tablet"
+
+  middlewares:
+    synthetic-tablet-generator:
+      stripPrefixRegex:
+        regex:
+          - "/synthetic-tablet-generator"
+
+  services:
+    synthetic-tablet:
+      loadBalancer:
+        servers:
+          - url: "http://synthetic-tablet"
