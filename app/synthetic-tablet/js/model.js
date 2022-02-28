@@ -68,7 +68,6 @@ class Model {
         mesh.rotation.y = -0.5; 
         mesh.morphTargetInfluences = [0]
 
-        console.log(mesh);
         scene.add( gltf.scene );
       }, undefined, function ( error ) {
         console.error( error );
