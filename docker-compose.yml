@@ -8,9 +8,6 @@ services:
     build:
       context: .
       dockerfile: nginx/Dockerfile
-    ports:
-      - "29180:80"
-      - "29181:443"
     networks:
       - reverse-proxy
     restart: unless-stopped
