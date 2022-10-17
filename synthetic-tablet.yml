@@ -5,7 +5,7 @@ http:
         - web
         - web-secure
       tls: true
-      rule: "Path(`/synthetic-tablet-generator`)"
+      rule: "PathPrefix(`/synthetic-tablet-generator`)"
       middlewares:
         - "synthetic-tablet-generator"
       service: "synthetic-tablet"

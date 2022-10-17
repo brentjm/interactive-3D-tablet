@@ -9,9 +9,11 @@ services:
       context: .
       dockerfile: nginx/Dockerfile
     networks:
-      - reverse-proxy
+      - smart-lab
     restart: unless-stopped
+    ports:
+      - 8083:80
 
 networks:
-  reverse-proxy:
+  smart-lab:
     external: true
