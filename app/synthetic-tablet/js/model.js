@@ -10,7 +10,7 @@ let mesh;
 
 class Model {
 
-	init() {
+  init() {
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x222222);
@@ -69,9 +69,11 @@ class Model {
         mesh.morphTargetInfluences = [0]
 
         scene.add( gltf.scene );
-      }, undefined, function ( error ) {
-        console.error( error );
-    } );
+      },
+      undefined, function ( error ) {
+          console.error( error );
+      } 
+    );
 
 
     renderer = new THREE.WebGLRenderer();
@@ -80,10 +82,10 @@ class Model {
 
     document.body.appendChild( renderer.domElement );
 
-		const controls = new OrbitControls( camera, renderer.domElement );
+    const controls = new OrbitControls( camera, renderer.domElement );
 
     animation();
-	}
+  }
 
   changeRotate(rotate) {
     mesh.rotation.y = rotate;
@@ -120,10 +122,7 @@ class Model {
 }
 
 function animation( time ) {
-
-	renderer.render( scene, camera );
-
+  renderer.render( scene, camera );
 }
-
 
 export default Model;
