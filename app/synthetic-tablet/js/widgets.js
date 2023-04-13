@@ -1,5 +1,5 @@
 export function makeWidgets(model) {
-
+  console.log(model);
   let rotate = document.getElementById("rotate");
   rotate.oninput = function() {
     model.changeRotate(this.value/100);

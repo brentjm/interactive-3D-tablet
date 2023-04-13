@@ -3,13 +3,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as dat from 'dat.gui';
 
-let camera, scene, renderer;
+var camera, scene, renderer;
 let alight, plight1, plight2;
 let texture;
 let mesh;
 
 class Model {
-
+  
   init() {
 
     scene = new THREE.Scene();
@@ -56,7 +56,8 @@ class Model {
 
     // Load the meshes and apply materials.
     loader = new GLTFLoader();
-    loader.load( 'synthetic-tablet/model/model.gltf', function ( gltf ) {
+    loader.load( 'synthetic-tablet/model/model.gltf',
+      function ( gltf ) {
         gltf.scene.scale.set(0.2,0.2,0.2);
         gltf.scene.traverse( function(child) {
           if (child instanceof THREE.Mesh) {
@@ -67,24 +68,31 @@ class Model {
         mesh.rotation.x = 3.14 / 2;
         mesh.rotation.y = -0.5; 
         mesh.morphTargetInfluences = [0]
-
+        
         scene.add( gltf.scene );
       },
-      undefined, function ( error ) {
+      undefined,
+      function ( error ) {
           console.error( error );
       } 
     );
 
 
-    renderer = new THREE.WebGLRenderer();
+    // Need to pass preserveDrawingBuffer so can save image.
+    // https://www.reddit.com/r/threejs/comments/y6j8yt/create_image_from_threejs_scene/
+    // https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+    // https://codepen.io/shivasaxena/pen/QEzrrv
+    renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true});
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setAnimationLoop( animation );
+    this.renderer = renderer;
 
     document.body.appendChild( renderer.domElement );
 
     const controls = new OrbitControls( camera, renderer.domElement );
 
     animation();
+
   }
 
   changeRotate(rotate) {
@@ -125,4 +133,5 @@ function animation( time ) {
   renderer.render( scene, camera );
 }
 
-export default Model;
+
+export { Model };

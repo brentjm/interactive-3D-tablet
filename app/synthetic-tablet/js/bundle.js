@@ -48809,14 +48809,14 @@
 	  });
 	}
 
-	let camera, scene, renderer;
+	var camera, scene, renderer;
 	let alight, plight1, plight2;
 	let texture;
 	let mesh;
 
 	class Model {
-
-		init() {
+	  
+	  init() {
 
 	    scene = new Scene();
 	    scene.background = new Color$1(0x222222);
@@ -48862,7 +48862,8 @@
 
 	    // Load the meshes and apply materials.
 	    loader = new GLTFLoader();
-	    loader.load( 'synthetic-tablet/model/model.gltf', function ( gltf ) {
+	    loader.load( 'synthetic-tablet/model/model.gltf',
+	      function ( gltf ) {
 	        gltf.scene.scale.set(0.2,0.2,0.2);
 	        gltf.scene.traverse( function(child) {
 	          if (child instanceof Mesh) {
@@ -48873,23 +48874,32 @@
 	        mesh.rotation.x = 3.14 / 2;
 	        mesh.rotation.y = -0.5; 
 	        mesh.morphTargetInfluences = [0];
-
+	        
 	        scene.add( gltf.scene );
-	      }, undefined, function ( error ) {
-	        console.error( error );
-	    } );
+	      },
+	      undefined,
+	      function ( error ) {
+	          console.error( error );
+	      } 
+	    );
 
 
-	    renderer = new WebGLRenderer();
+	    // Need to pass preserveDrawingBuffer so can save image.
+	    // https://www.reddit.com/r/threejs/comments/y6j8yt/create_image_from_threejs_scene/
+	    // https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+	    // https://codepen.io/shivasaxena/pen/QEzrrv
+	    renderer = new WebGLRenderer({preserveDrawingBuffer: true});
 	    renderer.setSize( window.innerWidth, window.innerHeight );
 	    renderer.setAnimationLoop( animation );
+	    this.renderer = renderer;
 
 	    document.body.appendChild( renderer.domElement );
 
-			new OrbitControls( camera, renderer.domElement );
+	    new OrbitControls( camera, renderer.domElement );
 
 	    animation();
-		}
+
+	  }
 
 	  changeRotate(rotate) {
 	    mesh.rotation.y = rotate;
@@ -48926,13 +48936,11 @@
 	}
 
 	function animation( time ) {
-
-		renderer.render( scene, camera );
-
+	  renderer.render( scene, camera );
 	}
 
 	function makeWidgets(model) {
-
+	  console.log(model);
 	  let rotate = document.getElementById("rotate");
 	  rotate.oninput = function() {
 	    model.changeRotate(this.value/100);
@@ -48974,8 +48982,80 @@
 
 	}
 
+	function saveImage(renderer) {
+	    // code to save image to file
+	    //  https://codepen.io/shivasaxena/pen/QEzrrv
+	    var saveLink = document.createElement('div');
+	    saveLink.style.position = 'absolute';
+	    saveLink.style.top = '10px';
+	    saveLink.style.width = '100%';
+	    saveLink.style.color = 'white !important';
+	    saveLink.style.textAlign = 'center';
+	    saveLink.innerHTML =
+	        '<a href="#" id="saveLink">Save Frame</a>';
+	    document.body.appendChild(saveLink);
+	    document.getElementById("saveLink").addEventListener('click', saveAsImage);
+
+	    function saveAsImage() {
+	      var imgData;
+	      var strDownloadMime = "image/octet-stream";
+
+	      try {
+	          var strMime = "image/jpeg";
+	          imgData = renderer.domElement.toDataURL(strMime);
+
+	          saveFile(imgData.replace(strMime, strDownloadMime), "test.jpg");
+
+	      } catch (e) {
+	          console.log(e);
+	          return;
+	      }
+
+	    }
+
+	    var saveFile = function (strData, filename) {
+	      var link = document.createElement('a');
+	      if (typeof link.download === 'string') {
+	          document.body.appendChild(link); //Firefox requires the link to be in the body
+	          link.download = filename;
+	          link.href = strData;
+	          link.click();
+	          document.body.removeChild(link); //remove the link when done
+	      } else {
+	          location.replace(uri);
+	      }
+	    };
+
+	}
+
+	function setupAutomate(model) {
+	  document.getElementById("automate").addEventListener('click', automate);
+
+	  function automate() {
+	    let chip = document.getElementById("chip");
+	    let sp = 0;
+	    let itter = 0;
+	    chip.value = sp;
+	    model.changeChip(sp);
+	    let intervalID = setInterval(
+	      function () {
+	        if (itter == 10)  {
+	          window.clearInterval(intervalID);
+	        }
+	        chip.value = sp;
+	        model.changeChip(sp/100.);
+	        sp += 10;
+	        itter += 1;
+	      }
+	      ,500
+	    );
+	  }
+	}
+
 	const model = new Model();
 	model.init();
 	makeWidgets(model);
+	saveImage(model.renderer);
+	setupAutomate(model);
 
 }));
