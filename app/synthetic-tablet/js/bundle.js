@@ -48944,40 +48944,48 @@
 	  let rotate = document.getElementById("rotate");
 	  rotate.oninput = function() {
 	    model.changeRotate(this.value/100);
+	    console.log(this.value);
 	  };
 
 	  let tilt = document.getElementById("tilt");
 	  tilt.oninput = function() {
 	    model.changeTilt(this.value/100);
+	    console.log(this.value);
 	  };
 	  let color = document.getElementById("color");
 	  color.oninput = function() {
 	    model.changeColor(this.value/100, 1 - this.value/100);
+	    console.log(this.value);
 	  };
 
 	  let ellipse = document.getElementById("ellipse");
 	  ellipse.oninput = function() {
 	    model.changeEllipse(this.value/100);
+	    console.log(this.value);
 	  };
 
 	  let thickness = document.getElementById("thickness");
 	  thickness.oninput = function() {
 	    model.changeThickness(this.value/100);
+	    console.log(this.value);
 	  };
 
 	  let roughness = document.getElementById("roughness");
 	  roughness.oninput = function() {
 	    model.changeRoughness(this.value/10000);
+	    console.log(this.value);
 	  };
 
 	  let gloss = document.getElementById("gloss");
 	  gloss.oninput = function() {
 	    model.changeGloss(this.value/100);
+	    console.log(this.value);
 	  };
 
 	  let chip = document.getElementById("chip");
 	  chip.oninput = function() {
 	    model.changeChip(this.value/100);
+	    console.log(this.value);
 	  };
 
 	}
@@ -49030,22 +49038,61 @@
 
 	function setupAutomate(model) {
 	  document.getElementById("automate").addEventListener('click', automate);
+	  let modelProps = {
+	    rotate: {
+	      element: document.getElementById("rotate"), 
+	      change: model.changeRotate,
+	      min: 0,
+	      max: 682,
+	      scale: 100,
+	    },
+	    tilt: {
+	      element: document.getElementById("tilt"),
+	      change: model.changeTilt,
+	      min: 90,
+	      max: 200,
+	      scale: 100,
+	    },
+	    chip: {
+	      element: document.getElementById("chip"), 
+	      change: model.changeChip,
+	      min: 0,
+	      max: 100,
+	      scale: 100,
+	    },
+	    roughness: {
+	      element: document.getElementById("roughness"), 
+	      change: model.changeRoughness,
+	      min: 0,
+	      max: 20,
+	      scale: 10000,
+	    },
+	    gloss: {
+	      element: document.getElementById("gloss"),
+	      change: model.changeGloss,
+	      min: 0,
+	      max: 55,
+	      scale: 100,
+	    },
+	  };
 
 	  function automate() {
-	    let chip = document.getElementById("chip");
-	    let sp = 0;
+	      
 	    let itter = 0;
-	    chip.value = sp;
-	    model.changeChip(sp);
+	    let sp = 0;
 	    let intervalID = setInterval(
 	      function () {
-	        if (itter == 10)  {
+	        itter += 1;
+	        if (itter == 50)  {
 	          window.clearInterval(intervalID);
 	        }
-	        chip.value = sp;
-	        model.changeChip(sp/100.);
-	        sp += 10;
-	        itter += 1;
+	        for (const p in modelProps) {
+	          sp = Math.random() * (modelProps[p]['max'] - modelProps[p]['min']) 
+	            + modelProps[p]['min'];
+	          console.log(p, sp);
+	          modelProps[p]['element'].value = sp;
+	          modelProps[p]['change'](sp / modelProps[p]['scale']);
+	        }
 	      }
 	      ,500
 	    );
